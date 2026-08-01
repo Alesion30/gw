@@ -1,0 +1,28 @@
+[tools]
+go = "latest"
+golangci-lint = "latest"
+goreleaser = "latest"
+
+[tasks.test]
+description = "テストを実行する"
+run = "go test ./..."
+
+[tasks.lint]
+description = "lint と format チェックを実行する"
+run = "golangci-lint run"
+
+[tasks.fmt]
+description = "コードを整形する"
+run = "golangci-lint fmt"
+
+[tasks.build]
+description = "バイナリを ./gw にビルドする"
+run = "go build -o gw ./cmd/gw"
+
+[tasks.snapshot]
+description = "リリース成果物をタグなしで作って dist/ に出す"
+run = "goreleaser release --snapshot --clean"
+
+[tasks.check]
+description = "test と lint をまとめて実行する"
+depends = ["test", "lint"]

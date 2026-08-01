@@ -1,0 +1,45 @@
+version: 2
+
+project_name: gw
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: gw
+    main: ./cmd/gw
+    binary: gw
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+archives:
+  - id: gw
+    formats: [tar.gz]
+    name_template: "gw_{{ .Os }}_{{ .Arch }}"
+    files:
+      - README.md
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+
+release:
+  draft: false
+  prerelease: auto
