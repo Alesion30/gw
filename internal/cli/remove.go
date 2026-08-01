@@ -23,9 +23,9 @@ func newRemoveCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "remove [query]",
 		Aliases: []string{"rm"},
-		Short:   "worktree を削除する",
-		Long: "worktree を選んで削除する。\n" +
-			"--gone を付けると、upstream が消えたブランチの worktree をまとめて削除する。",
+		Short:   "Remove a worktree",
+		Long: "Select a worktree and remove it.\n" +
+			"With --gone, remove every worktree whose branch has lost its upstream.",
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(_ *cobra.Command, args []string) error {
 			e, err := newEnv()
@@ -37,9 +37,9 @@ func newRemoveCmd() *cobra.Command {
 	}
 
 	flags := cmd.Flags()
-	flags.BoolVarP(&opts.force, "force", "f", false, "変更が残っていても削除する")
-	flags.BoolVar(&opts.gone, "gone", false, "upstream が消えたブランチの worktree をすべて削除する")
-	flags.BoolVar(&opts.deleteBranch, "delete-branch", false, "--gone のときにローカルブランチも削除する")
+	flags.BoolVarP(&opts.force, "force", "f", false, "remove even with uncommitted changes")
+	flags.BoolVar(&opts.gone, "gone", false, "remove every worktree whose branch has lost its upstream")
+	flags.BoolVar(&opts.deleteBranch, "delete-branch", false, "also delete the local branch (with --gone)")
 
 	return cmd
 }

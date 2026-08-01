@@ -67,7 +67,7 @@ func Find(items []string, opts Options) (Result, error) {
 
 	tty, err := os.OpenFile("/dev/tty", os.O_RDWR, 0)
 	if err != nil {
-		return Result{Index: -1}, fmt.Errorf("端末を開けません: %w", err)
+		return Result{Index: -1}, fmt.Errorf("cannot open the terminal: %w", err)
 	}
 	defer func() { _ = tty.Close() }()
 

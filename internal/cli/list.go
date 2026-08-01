@@ -8,8 +8,8 @@ func newListCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:                "list [git-worktree-list-options]",
 		Aliases:            []string{"ls"},
-		Short:              "worktree の一覧を表示する",
-		Long:               "引数をそのまま `git worktree list` へ渡す。",
+		Short:              "List worktrees",
+		Long:               "Pass the arguments through to `git worktree list`.",
 		DisableFlagParsing: true,
 		RunE: func(_ *cobra.Command, args []string) error {
 			e, err := newEnv()

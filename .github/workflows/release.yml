@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       bump:
-        description: "上げる桁"
+        description: "Which part of the version to increment"
         type: choice
         options: [patch, minor, major]
         default: patch
       version:
-        description: "バージョンを直接指定する場合（例: v1.0.0）。空なら bump から算出する"
+        description: "Exact version to release (e.g. v1.0.0). Leave empty to derive it from bump"
         type: string
         default: ""
 
@@ -56,12 +56,12 @@ jobs:
           fi
 
           if ! printf '%s' "$tag" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
-            echo "::error::バージョンの形式が不正: ${tag}"
+            echo "::error::invalid version format: ${tag}"
             exit 1
           fi
 
           if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
-            echo "::error::タグ ${tag} は既に存在する"
+            echo "::error::tag ${tag} already exists"
             exit 1
           fi
 

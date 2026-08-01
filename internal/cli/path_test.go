@@ -24,11 +24,11 @@ func TestRunPath(t *testing.T) {
 	}
 
 	if got := out.String(); got != wt {
-		t.Errorf("出力 = %q, want %q", got, wt)
+		t.Errorf("output = %q, want %q", got, wt)
 	}
 	// 末尾に改行を付けない（シェルの $(...) でそのまま cd に渡すため）
 	if strings.HasSuffix(out.String(), "\n") {
-		t.Error("末尾に改行が付いています")
+		t.Error("output ends with a newline")
 	}
 }
 
@@ -45,7 +45,7 @@ func TestRunPathExcludesCurrentWorktree(t *testing.T) {
 	}
 
 	if len(fdr.items) != 1 || !strings.HasPrefix(fdr.items[0], root+"  ") {
-		t.Errorf("候補 = %v, want main の worktree のみ", fdr.items)
+		t.Errorf("candidates = %v, want only the main worktree", fdr.items)
 	}
 }
 
@@ -54,7 +54,7 @@ func TestRunPathNoOtherWorktrees(t *testing.T) {
 
 	err := runPath(e, "")
 	if err == nil || !strings.Contains(err.Error(), "no other worktrees") {
-		t.Fatalf("runPath() = %v, want no other worktrees エラー", err)
+		t.Fatalf("runPath() = %v, want no other worktrees error", err)
 	}
 }
 

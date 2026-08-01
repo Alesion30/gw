@@ -3,6 +3,7 @@ package git
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -135,7 +136,7 @@ func (c Client) RepoRoot() (string, error) {
 		return "", err
 	}
 	if len(worktrees) == 0 {
-		return "", fmt.Errorf("リポジトリのルートを特定できません")
+		return "", errors.New("cannot determine the repository root")
 	}
 	return worktrees[0].Path, nil
 }

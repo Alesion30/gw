@@ -13,9 +13,9 @@ import (
 func newPathCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "path [query]",
-		Short: "worktree を選択してパスを出力する",
-		Long: "カレント以外の worktree を選んでパスを標準出力へ書く。\n" +
-			"シェル関数から `cd \"$(gw path)\"` の形で使う。",
+		Short: "Select a worktree and print its path",
+		Long: "Select a worktree other than the current one and write its path to stdout.\n" +
+			"Meant to be used from a shell function as `cd \"$(gw path)\"`.",
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(_ *cobra.Command, args []string) error {
 			e, err := newEnv()

@@ -15,9 +15,9 @@ import (
 func newCopyCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "copy <file> [file ...]",
-		Short: "メインの worktree からファイルをコピーする",
-		Long: "メインの worktree から現在の worktree へファイルをコピーする。\n" +
-			".env のように gitignore していて worktree に持ち越されないファイル用。",
+		Short: "Copy files from the main worktree",
+		Long: "Copy files from the main worktree into the current one.\n" +
+			"For gitignored files such as .env that a new worktree does not carry over.",
 		Args:    cobra.MinimumNArgs(1),
 		Example: "  gw copy .env .envrc.local",
 		RunE: func(_ *cobra.Command, args []string) error {

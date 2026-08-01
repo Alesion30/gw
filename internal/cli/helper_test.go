@@ -90,10 +90,10 @@ func assertDirExists(t *testing.T, path string) {
 
 	info, err := os.Stat(path)
 	if err != nil {
-		t.Fatalf("%s が存在しません: %v", path, err)
+		t.Fatalf("%s does not exist: %v", path, err)
 	}
 	if !info.IsDir() {
-		t.Fatalf("%s がディレクトリではありません", path)
+		t.Fatalf("%s is not a directory", path)
 	}
 }
 
@@ -101,6 +101,6 @@ func assertNotExists(t *testing.T, path string) {
 	t.Helper()
 
 	if _, err := os.Stat(path); !os.IsNotExist(err) {
-		t.Fatalf("%s が残っています", path)
+		t.Fatalf("%s still exists", path)
 	}
 }

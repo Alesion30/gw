@@ -33,10 +33,10 @@ func TestRunRemoveExcludesMainWorktree(t *testing.T) {
 	}
 
 	if len(fdr.items) != 1 {
-		t.Fatalf("候補 = %v, want 1 件", fdr.items)
+		t.Fatalf("candidates = %v, want 1", fdr.items)
 	}
 	if strings.Contains(fdr.items[0], "[main]") {
-		t.Errorf("メインの worktree が候補に含まれています: %v", fdr.items)
+		t.Errorf("the main worktree is among the candidates: %v", fdr.items)
 	}
 }
 
@@ -45,7 +45,7 @@ func TestRunRemoveGoneRejectsQuery(t *testing.T) {
 
 	err := runRemove(e, "feat", removeOptions{gone: true})
 	if err == nil || !strings.Contains(err.Error(), "does not take a query") {
-		t.Fatalf("runRemove() = %v, want query 拒否エラー", err)
+		t.Fatalf("runRemove() = %v, want query rejection error", err)
 	}
 }
 
@@ -54,7 +54,7 @@ func TestRunRemoveDeleteBranchRequiresGone(t *testing.T) {
 
 	err := runRemove(e, "", removeOptions{deleteBranch: true})
 	if err == nil || !strings.Contains(err.Error(), "only available with --gone") {
-		t.Fatalf("runRemove() = %v, want --gone 必須エラー", err)
+		t.Fatalf("runRemove() = %v, want --gone required error", err)
 	}
 }
 
@@ -80,7 +80,7 @@ func TestRunRemoveGone(t *testing.T) {
 	assertNotExists(t, goneWt)
 	assertDirExists(t, aliveWt)
 	if !e.git.BranchExists("feat/gone") {
-		t.Error("--delete-branch を指定していないのにローカルブランチが消えています")
+		t.Error("the local branch was deleted without --delete-branch")
 	}
 }
 
@@ -100,7 +100,7 @@ func TestRunRemoveGoneDeleteBranch(t *testing.T) {
 
 	assertNotExists(t, wt)
 	if e.git.BranchExists("feat/gone") {
-		t.Error("ローカルブランチ feat/gone が残っています")
+		t.Error("the local branch feat/gone still exists")
 	}
 }
 

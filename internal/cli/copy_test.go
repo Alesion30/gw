@@ -43,7 +43,7 @@ func TestRunCopyPreservesPermission(t *testing.T) {
 		t.Fatal(err)
 	}
 	if got := info.Mode().Perm(); got != 0o700 {
-		t.Errorf("パーミッション = %o, want 700", got)
+		t.Errorf("permission = %o, want 700", got)
 	}
 }
 
@@ -53,7 +53,7 @@ func TestRunCopyRejectsMainWorktree(t *testing.T) {
 
 	err := runCopy(e, []string{".env"})
 	if err == nil || !strings.Contains(err.Error(), "main worktree") {
-		t.Fatalf("runCopy() = %v, want メイン worktree 拒否エラー", err)
+		t.Fatalf("runCopy() = %v, want main worktree rejection error", err)
 	}
 }
 
@@ -65,7 +65,7 @@ func TestRunCopyMissingFile(t *testing.T) {
 
 	// 1 件でも失敗したらエラー扱いにするが、残りのコピーは続ける
 	if err := runCopy(e, []string{".missing", ".env"}); err == nil {
-		t.Fatal("runCopy() = nil, want エラー")
+		t.Fatal("runCopy() = nil, want error")
 	}
 	assertFileContent(t, filepath.Join(wt, ".env"), "TOKEN=secret\n")
 }
@@ -88,7 +88,7 @@ func assertFileContent(t *testing.T, path, want string) {
 
 	got, err := os.ReadFile(path)
 	if err != nil {
-		t.Fatalf("%s を読めません: %v", path, err)
+		t.Fatalf("cannot read %s: %v", path, err)
 	}
 	if string(got) != want {
 		t.Errorf("%s = %q, want %q", path, got, want)

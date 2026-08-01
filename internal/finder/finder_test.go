@@ -13,7 +13,7 @@ func TestFilterEmptyQueryKeepsOrder(t *testing.T) {
 	m := newModel(items, Options{})
 
 	if len(m.matches) != len(items) {
-		t.Fatalf("matches = %d 件, want %d 件", len(m.matches), len(items))
+		t.Fatalf("matches = %d, want %d", len(m.matches), len(items))
 	}
 	for i, match := range m.matches {
 		if match.Str != items[i] || match.Index != i {
@@ -26,7 +26,7 @@ func TestFilterWithInitialQuery(t *testing.T) {
 	m := newModel(items, Options{Query: "login"})
 
 	if len(m.matches) != 1 {
-		t.Fatalf("matches = %+v, want 1 件", m.matches)
+		t.Fatalf("matches = %+v, want 1", m.matches)
 	}
 	if m.matches[0].Str != "feat/login" {
 		t.Errorf("matches[0] = %q, want feat/login", m.matches[0].Str)
@@ -54,15 +54,15 @@ func TestEnterWithNoMatch(t *testing.T) {
 		allowNoMatch bool
 		wantDone     bool
 	}{
-		{name: "AllowNoMatch で確定する", allowNoMatch: true, wantDone: true},
-		{name: "AllowNoMatch なしでは無視する", allowNoMatch: false, wantDone: false},
+		{name: "confirms with AllowNoMatch", allowNoMatch: true, wantDone: true},
+		{name: "ignores Enter without AllowNoMatch", allowNoMatch: false, wantDone: false},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			m := newModel(items, Options{Query: "zzz-nomatch", AllowNoMatch: tt.allowNoMatch})
 			if len(m.matches) != 0 {
-				t.Fatalf("matches = %+v, want 0 件", m.matches)
+				t.Fatalf("matches = %+v, want 0", m.matches)
 			}
 
 			next, _ := m.Update(tea.KeyMsg{Type: tea.KeyEnter})
@@ -101,18 +101,18 @@ func TestMoveCursorClampsAndScrolls(t *testing.T) {
 
 	m.moveCursor(-1)
 	if m.cursor != 0 {
-		t.Errorf("先頭より上に移動しました: cursor = %d", m.cursor)
+		t.Errorf("moved above the first item: cursor = %d", m.cursor)
 	}
 
 	m.moveCursor(1)
 	m.moveCursor(1)
 	if m.cursor != 2 || m.offset != 1 {
-		t.Errorf("cursor = %d, offset = %d, want 2 と 1", m.cursor, m.offset)
+		t.Errorf("cursor = %d, offset = %d, want 2 and 1", m.cursor, m.offset)
 	}
 
 	m.moveCursor(10)
 	if m.cursor != len(items)-1 {
-		t.Errorf("末尾を超えて移動しました: cursor = %d", m.cursor)
+		t.Errorf("moved past the last item: cursor = %d", m.cursor)
 	}
 }
 
@@ -124,10 +124,10 @@ func TestTypingResetsCursor(t *testing.T) {
 	got := next.(model)
 
 	if got.cursor != 0 || got.offset != 0 {
-		t.Errorf("cursor = %d, offset = %d, want 0 と 0", got.cursor, got.offset)
+		t.Errorf("cursor = %d, offset = %d, want 0 and 0", got.cursor, got.offset)
 	}
 	if len(got.matches) != 3 {
-		t.Errorf("matches = %+v, want 3 件", got.matches)
+		t.Errorf("matches = %+v, want 3", got.matches)
 	}
 }
 
@@ -172,9 +172,9 @@ func TestMatchItems(t *testing.T) {
 		query string
 		want  []string
 	}{
-		{name: "空クエリは全件", query: "", want: items},
-		{name: "部分一致", query: "log", want: []string{"feat/login", "feat/logout"}},
-		{name: "マッチなし", query: "zzz", want: nil},
+		{name: "empty query keeps every item", query: "", want: items},
+		{name: "partial match", query: "log", want: []string{"feat/login", "feat/logout"}},
+		{name: "no match", query: "zzz", want: nil},
 	}
 
 	for _, tt := range tests {

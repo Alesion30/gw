@@ -4,25 +4,25 @@ golangci-lint = "latest"
 goreleaser = "latest"
 
 [tasks.test]
-description = "テストを実行する"
+description = "Run the tests"
 run = "go test ./..."
 
 [tasks.lint]
-description = "lint と format チェックを実行する"
+description = "Run lint and format checks"
 run = "golangci-lint run"
 
 [tasks.fmt]
-description = "コードを整形する"
+description = "Format the code"
 run = "golangci-lint fmt"
 
 [tasks.build]
-description = "バイナリを ./gw にビルドする"
+description = "Build the binary to ./gw"
 run = "go build -o gw ./cmd/gw"
 
 [tasks.snapshot]
-description = "リリース成果物をタグなしで作って dist/ に出す"
+description = "Build release artifacts into dist/ without a tag"
 run = "goreleaser release --snapshot --clean"
 
 [tasks.check]
-description = "test と lint をまとめて実行する"
+description = "Run test and lint together"
 depends = ["test", "lint"]

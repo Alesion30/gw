@@ -22,11 +22,11 @@ func newUseCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "use [query]",
-		Short: "ブランチを選んで worktree を作成する",
-		Long: "worktree 化していないローカルブランチから選んで worktree を作る。\n" +
-			"どれにもマッチしない文字列で確定すると、その名前で新しいブランチを作るか確認する。\n" +
-			"作成先は $GW_WORKTREE_DIR（既定: <repo-root>/.worktrees）配下。\n" +
-			"リポジトリルートに ." + "gw-setup があれば、作成した worktree 内で実行する。",
+		Short: "Create a worktree for a branch",
+		Long: "Pick a local branch that has no worktree yet and create one for it.\n" +
+			"Confirming a query that matches nothing asks whether to create a branch with that name.\n" +
+			"Worktrees are created under $GW_WORKTREE_DIR (default: <repo-root>/.worktrees).\n" +
+			"If ." + "gw-setup exists at the repository root, it runs inside the new worktree.",
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(_ *cobra.Command, args []string) error {
 			e, err := newEnv()
@@ -37,7 +37,7 @@ func newUseCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&base, "base", "", "新規ブランチの起点（既定: カレントブランチ）")
+	cmd.Flags().StringVar(&base, "base", "", "starting point for a new branch (default: current branch)")
 
 	return cmd
 }

@@ -44,9 +44,9 @@ end`,
 func newShellInitCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "shell-init <zsh|bash|fish>",
-		Short: "gw cd 用のシェル関数を出力する",
-		Long: "gw cd を使うためのシェル関数を出力する。\n" +
-			"zsh なら .zshrc に `eval \"$(gw shell-init zsh)\"` を書く。",
+		Short: "Print the shell function that powers gw cd",
+		Long: "Print the shell function needed for gw cd.\n" +
+			"For zsh, add `eval \"$(gw shell-init zsh)\"` to .zshrc.",
 		Args:      cobra.ExactArgs(1),
 		ValidArgs: []string{"zsh", "bash", "fish"},
 		RunE: func(cmd *cobra.Command, args []string) error {

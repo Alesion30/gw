@@ -56,7 +56,7 @@ func currentDir() (string, error) {
 func NewRootCmd(version string) *cobra.Command {
 	root := &cobra.Command{
 		Use:           "gw",
-		Short:         "git worktree のラッパーコマンド",
+		Short:         "A wrapper around git worktree",
 		Version:       version,
 		SilenceUsage:  true,
 		SilenceErrors: true,

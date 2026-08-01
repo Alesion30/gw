@@ -21,7 +21,7 @@ func TestRunUseExistingBranch(t *testing.T) {
 
 	// worktree 化済みの main は候補から外れる
 	if want := []string{"feat/login"}; !equal(fdr.items, want) {
-		t.Errorf("候補 = %v, want %v", fdr.items, want)
+		t.Errorf("candidates = %v, want %v", fdr.items, want)
 	}
 	assertDirExists(t, filepath.Join(root, ".worktrees", "feat/login"))
 }
@@ -35,7 +35,7 @@ func TestRunUseCreatesNewBranch(t *testing.T) {
 
 	assertDirExists(t, filepath.Join(root, ".worktrees", "feat/new"))
 	if !e.git.BranchExists("feat/new") {
-		t.Error("ブランチ feat/new が作られていません")
+		t.Error("the branch feat/new was not created")
 	}
 }
 
@@ -91,7 +91,7 @@ func TestRunUseRunsSetupScript(t *testing.T) {
 
 	marker := filepath.Join(root, ".worktrees", "feat/setup", ".setup-ran")
 	if _, err := os.Stat(marker); err != nil {
-		t.Errorf(".gw-setup が worktree 内で実行されていません: %v", err)
+		t.Errorf(".gw-setup did not run inside the worktree: %v", err)
 	}
 }
 
@@ -105,7 +105,7 @@ func TestRunUseRejectsBranchCheckedOutElsewhere(t *testing.T) {
 
 	err := runUse(e, "feat/taken", "")
 	if err == nil || !strings.Contains(err.Error(), "already checked out") {
-		t.Fatalf("runUse() = %v, want already checked out エラー", err)
+		t.Fatalf("runUse() = %v, want already checked out error", err)
 	}
 }
 
