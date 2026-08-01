@@ -114,9 +114,11 @@ mise run build      # ./gw にビルド
 mise run snapshot   # dist/ にリリース成果物を作る
 ```
 
-リリースは `v*` のタグを push すると GoReleaser が走る。
+## リリース
 
-```sh
-git tag v0.1.0
-git push origin v0.1.0
-```
+[Actions の Release ワークフロー](https://github.com/Alesion30/gw/actions/workflows/release.yml)を Run workflow から実行する。ローカルでタグを打つ必要はない。
+
+- `bump` — `patch` / `minor` / `major` から選ぶ。直近のタグを基準に次のバージョンを決める
+- `version` — `v1.0.0` のように直接指定したいときだけ埋める。空なら `bump` から算出する
+
+テストが通ったらタグを作成して push し、そのまま GoReleaser がバイナリをビルドして GitHub Release を作る。既存のタグと同じバージョンになる場合は、タグを作る前に失敗する。

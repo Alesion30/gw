@@ -1,8 +1,17 @@
 name: Release
 
 on:
-  push:
-    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "上げる桁"
+        type: choice
+        options: [patch, minor, major]
+        default: patch
+      version:
+        description: "バージョンを直接指定する場合（例: v1.0.0）。空なら bump から算出する"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -19,6 +28,52 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
+
+      - name: Test
+        run: go test ./...
+
+      - name: Resolve version
+        id: version
+        env:
+          BUMP: ${{ inputs.bump }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+
+          if [ -n "$VERSION" ]; then
+            tag="v${VERSION#v}"
+          else
+            # バージョンソートで最新のタグを拾う（タグがなければ v0.0.0 起点）
+            latest=$(git tag --list 'v*' --sort=-v:refname | head -n 1)
+            latest=${latest:-v0.0.0}
+            IFS=. read -r major minor patch <<<"${latest#v}"
+            case "$BUMP" in
+              major) major=$((major + 1)); minor=0; patch=0 ;;
+              minor) minor=$((minor + 1)); patch=0 ;;
+              patch) patch=$((patch + 1)) ;;
+            esac
+            tag="v${major}.${minor}.${patch}"
+          fi
+
+          if ! printf '%s' "$tag" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "::error::バージョンの形式が不正: ${tag}"
+            exit 1
+          fi
+
+          if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+            echo "::error::タグ ${tag} は既に存在する"
+            exit 1
+          fi
+
+          echo "tag=${tag}" >>"$GITHUB_OUTPUT"
+          echo "## ${tag}" >>"$GITHUB_STEP_SUMMARY"
+
+      - name: Push tag
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          git tag "$TAG" "$GITHUB_SHA"
+          git push origin "$TAG"
 
       - uses: goreleaser/goreleaser-action@e435ccd777264be153ace6237001ef4d979d3a7a # v6.4.0
         with:
