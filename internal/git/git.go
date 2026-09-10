@@ -124,13 +124,20 @@ func (c Client) Worktrees() ([]Worktree, error) {
 	return ParseWorktreeList(out), nil
 }
 
-// RepoRoot はリポジトリのルートを返す。
+// RepoRoot はカレントディレクトリが属する worktree のルートを返す。
 // bare リポジトリでは --show-toplevel が失敗するため、メインの worktree で代替する。
 func (c Client) RepoRoot() (string, error) {
 	if root, err := c.Output("rev-parse", "--show-toplevel"); err == nil {
 		return root, nil
 	}
+	return c.MainRoot()
+}
 
+// MainRoot はメインの worktree のパスを返す。
+// worktree の中から呼ばれても同じパスを返すので、リポジトリ全体で 1 つに定めたい
+// .worktrees や .gw-setup の置き場にはこちらを使う。
+func (c Client) MainRoot() (string, error) {
+	// `git worktree list` は必ずメインの worktree を先頭に並べる
 	worktrees, err := c.Worktrees()
 	if err != nil {
 		return "", err
