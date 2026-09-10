@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/Alesion30/gw/internal/finder"
+	"github.com/Alesion30/gw/internal/git"
 )
 
 func TestRunUseExistingBranch(t *testing.T) {
@@ -37,6 +38,26 @@ func TestRunUseCreatesNewBranch(t *testing.T) {
 	if !e.git.BranchExists("feat/new") {
 		t.Error("the branch feat/new was not created")
 	}
+}
+
+func TestRunUseFromInsideWorktree(t *testing.T) {
+	root, e, _ := newTestEnv(t)
+
+	if err := runUse(e, "feat/first", ""); err != nil {
+		t.Fatalf("runUse() = %v", err)
+	}
+	inside := filepath.Join(root, ".worktrees", "feat/first")
+
+	// 作った worktree の中から実行しても、置き場はメインの worktree 基準のまま
+	e.git = git.Client{Dir: inside}
+	e.cwd = inside
+
+	if err := runUse(e, "feat/second", ""); err != nil {
+		t.Fatalf("runUse() = %v", err)
+	}
+
+	assertDirExists(t, filepath.Join(root, ".worktrees", "feat/second"))
+	assertNotExists(t, filepath.Join(inside, ".worktrees"))
 }
 
 func TestRunUseSkipsFinderForUnmatchedQuery(t *testing.T) {

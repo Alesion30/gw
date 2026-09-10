@@ -128,7 +128,8 @@ func runUse(e *env, query, base string) error {
 		target, newBranch = branchCandidate{branch: typed}, true
 	}
 
-	root, err := e.git.RepoRoot()
+	// worktree の中から実行されても .worktrees が入れ子にならないよう、メインの worktree を基準にする
+	root, err := e.git.MainRoot()
 	if err != nil {
 		return err
 	}
